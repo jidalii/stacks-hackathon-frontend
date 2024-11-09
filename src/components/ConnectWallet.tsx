@@ -31,18 +31,33 @@ const ConnectWallet = () => {
 
   if (mounted && userSession.isUserSignedIn()) {
     return (
-      <div className="Container">
-        <button className="Connect" onClick={disconnect}>
-          Disconnect Wallet
-        </button>
-        <p>mainnet: {userSession.loadUserData().profile.stxAddress.mainnet}</p>
-        <p>testnet: {userSession.loadUserData().profile.stxAddress.testnet}</p>
-      </div>
+      <div >
+        <div className="Container">
+
+
+          {/* <button className="Connect" onClick={disconnect}> */}
+          <button className="w-full flex justify-center py-3 px-4 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-colors"
+            onClick={disconnect}>
+
+            Disconnect Wallet
+          </button>
+          {/* <p>mainnet: {userSession.loadUserData().profile.stxAddress.mainnet}</p>
+        <p>testnet: {userSession.loadUserData().profile.stxAddress.testnet}</p> */}
+
+
+        </div>
+        
+        {/* <div >
+          <p>testnet: {userSession.loadUserData().profile.stxAddress.testnet}</p>
+        </div> */}
+      </div >
+
     );
   }
 
   return (
-    <button className="Connect" onClick={authenticate}>
+    <button className="w-full flex justify-center py-3 px-4 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-colors"
+      onClick={authenticate}>
       Connect Wallet
     </button>
   );
