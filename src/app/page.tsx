@@ -1,5 +1,5 @@
 "use client";
-
+import React from "react";
 import Image from "next/image";
 import { useEffect, useState } from "react";
 import styles from "./page.module.css";
@@ -16,6 +16,9 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { ScrollArea } from "@/components/ui/scroll-area"
 import { toast } from "@/hooks/use-toast"
 import { Plus, Minus } from 'lucide-react'
+
+import FriendsPage from "./friends/page";
+import Link from 'next/link';
 
 export default function Home() {
   const [amount, setAmount] = useState('')
@@ -72,7 +75,7 @@ export default function Home() {
       }}
     >
 
-
+    
 
 
       <main className={styles.main}>
@@ -84,6 +87,8 @@ export default function Home() {
           {/* ContractCallVote file: `./src/components/ContractCallVote.js` */}
           <ContractCallVote />
         </div>
+
+
         <h1 className="text-2xl font-bold">Web3 Token Distributor</h1>
         <div className="flex-grow">
           <Label htmlFor="amount">Amount</Label>
@@ -145,6 +150,12 @@ export default function Home() {
             </div>
           </ScrollArea>
         </div>
+
+
+        <FriendsPage />
+        <Link href="/friends">
+          <Button variant="link">Go to Friends Page</Button>
+        </Link>
 
       </main>
     </Connect>
