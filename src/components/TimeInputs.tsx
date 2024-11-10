@@ -42,8 +42,8 @@ export function TimeInputs({
           <input
             type="number"
             id="claimDuration"
-            value={claimDuration ? claimDuration / 3600 : ''}
-            onChange={(e) => onClaimDurationChange((parseInt(e.target.value) || 0) * 3600)}
+            value={claimDuration}
+            onChange={(e) => onClaimDurationChange((parseInt(e.target.value) || 0))}
             className="block w-full px-4 py-3 rounded-lg border border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
             placeholder="Enter duration in hours"
             min="0"

@@ -47,9 +47,9 @@ const ConnectWallet = () => {
 
         </div>
         
-        {/* <div >
+        <div >
           <p>testnet: {userSession.loadUserData().profile.stxAddress.testnet}</p>
-        </div> */}
+        </div>
       </div >
 
     );
