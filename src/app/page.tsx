@@ -3,85 +3,74 @@
 import styles from "./page.module.css";
 
 import { Connect } from "@stacks/connect-react";
-
 import ConnectWallet, { userSession } from "../components/ConnectWallet";
-// import ContractCallVote from "../components/ContractCallVote";
-import ContractCall_pocket from "../components/ContractCall_pocket";
-
-// import { Button } from "@/components/ui/button"
-// import { Input } from "@/components/ui/input"
-// import { Label } from "@/components/ui/label"
-// import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-// import { ScrollArea } from "@/components/ui/scroll-area"
-// import { toast } from "@/hooks/use-toast"
-// import { Plus, Minus, Coins, Trash2, AlertCircle } from 'lucide-react'
-
-// type DistributionMode = 'even' | 'random';
-// class TokenDistributor {
-//   private amount: number;
-//   private mode: DistributionMode;
-//   private addresses: string[];
-//   private revealBlock: number;
-//   private claimDuration: number;
-//   constructor(
-//     amount: number,
-//     mode: DistributionMode,
-//     addresses: string[],
-//     revealBlock: number,
-//     claimDuration: number
-//   ) {
-//     this.amount = amount;
-//     this.mode = mode;
-//     this.addresses = addresses;
-//     this.revealBlock = revealBlock;
-//     this.claimDuration = claimDuration;
-//   }
-
-//   getAmount(): number { return this.amount; }
-//   setAmount(newAmount: number): void { this.amount = newAmount; }
-//   getMode(): DistributionMode { return this.mode; }
-//   setMode(newMode: DistributionMode): void { this.mode = newMode; }
-//   getAddresses(): string[] { return this.addresses; }
-//   setAddresses(newAddresses: string[]): void { this.addresses = newAddresses }
-//   getRevealBlock(): number { return this.revealBlock; }
-//   setRevealBlock(newRevealBlock: number): void { this.revealBlock = newRevealBlock; }
-//   getClaimDuration(): number { return this.claimDuration; }
-//   setClaimDuration(newClaimDuration: number): void { this.claimDuration = newClaimDuration; }
-
-//   logValues(): void {
-//     console.log(`Amount: ${this.amount}`);
-//     console.log(`Mode: ${this.mode}`);
-//     console.log(`Addresses: ${this.addresses.join(', ')}`);
-//     console.log(`Reveal Block: ${this.revealBlock}`);
-//     console.log(`Claim Duration: ${this.claimDuration}`);
-//   }
-
-// }
+import ContractCallPocketButton from "../components/CreateRedPocket";
 import React, { useState, useCallback } from 'react';
+import { useConnect,ConnectProvider } from "@stacks/connect-react"; // Import useConnect hook
 import { Coins, AlertCircle } from 'lucide-react';
-import { TokenDistribution } from '../types/Distribution';
+import { DistributeParams } from "../types/DistributeParams";
+
 import { TimeInputs } from '../components/TimeInputs';
 import { AddressList } from '../components/AddressList';
+import { StacksTestnet } from "@stacks/network";
+import { AnchorMode, PostConditionMode, uintCV, principalCV, listCV } from "@stacks/transactions";
+import { DistributeParams } from "../types/DistributeParams";
+import { FinishedTxData } from "@stacks/connect-react"; 
 
 export default function Home() {
+  // const { doContractCall } = useConnect(); // useConnect inside component
 
-  const [distribution, setDistribution] = useState(new TokenDistribution());
+  const distribute = (params: DistributeParams) => {
+    const addressesCV = listCV(params.addresses.map(address => principalCV(address)));
+  
+    doContractCall({
+      network: new StacksTestnet(),
+      anchorMode: AnchorMode.Any,
+      contractAddress: "ST153CEHB9B8RGTT8NWGZX15H37KTH0S48WK0DC0H",
+      contractName: "redPocket",
+      functionName: "createRedPocket",
+      functionArgs: [
+        uintCV(params.amount),
+        uintCV(params.mode),
+        addressesCV,
+        uintCV(params.revealBlock),
+        uintCV(params.claimDuration),
+      ],
+      postConditionMode: PostConditionMode.Deny,
+      postConditions: [],
+      onFinish: (data: FinishedTxData) => {
+        console.log("onFinish:", data);
+        window
+          .open(
+            `https://explorer.hiro.so/txid/${data.txId}?chain=testnet`,
+            "_blank"
+          )
+          ?.focus();
+      },
+      onCancel: () => {
+        console.log("onCancel:", "Transaction was canceled");
+      },
+    });
+  };
 
+  const [distribution, setDistribution] = useState<DistributeParams>({
+    amount: 0,
+    mode: 0,
+    addresses: [],
+    revealBlock: 0,
+    claimDuration: 0,
+  });
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    // Directly log each parameter value
-    console.log('Total Amount:', distribution.amount);
-    console.log('Distribution Mode:', distribution.mode);
-    console.log('Reveal Block:', distribution.revealBlock);
-    console.log('Claim Duration:', distribution.claimDuration);
-    console.log('Addresses:', distribution.addresses.filter(addr => addr.trim() !== ''));
+    console.log("Submitting distribution:", distribution);
+    distribute(distribution); // Pass doContractCall to distribute
   };
 
   const addAddress = useCallback(() => {
     setDistribution(prev => ({
       ...prev,
-      addresses: [...prev.addresses, '']
+      addresses: [...prev.addresses, ""]
     }));
   }, []);
 
@@ -95,60 +84,40 @@ export default function Home() {
   const updateAddress = useCallback((index: number, value: string) => {
     setDistribution(prev => ({
       ...prev,
-      addresses: prev.addresses.map((addr, i) => i === index ? value : addr)
+      addresses: prev.addresses.map((addr, i) => (i === index ? value : addr))
     }));
   }, []);
 
+  const authOptions = {
+    appDetails: {
+      name: "Stacks Next.js Template",
+      icon: "/logo.png",
+    },
+    userSession,
+    redirectTo: "/",
+    onFinish: () => {
+      window.location.reload();
+    },
+  };
 
 
   return (
     <Connect
-      authOptions={{
-        appDetails: {
-          name: "Stacks Next.js Template",
-          icon: window.location.origin + "/logo.png",
-        },
-        redirectTo: "/",
-        onFinish: () => {
-          window.location.reload();
-        },
-        userSession,
-      }}
+      authOptions={authOptions}
     >
-
-
       <main className={styles.main}>
-
         <div className="min-h-screen bg-gradient-to-br from-indigo-100 via-purple-50 to-pink-100 py-12 px-4 sm:px-6 lg:px-8">
           <div className="max-w-2xl mx-auto">
-
-
-
-
-
             <div className="bg-white rounded-2xl shadow-xl p-6 sm:p-8">
-
-
-
               <div className="flex justify-between items-center mb-8">
                 <div className="flex items-center gap-3">
                   <Coins className="w-8 h-8 text-indigo-600" />
                   <h1 className="text-2xl font-bold text-gray-900">Token Distributor</h1>
                 </div>
                 <div>
-              {/* ConnectWallet file: `./src/components/ConnectWallet.js` */}
-              <ConnectWallet />
-              {/* ContractCallVote file: `./src/components/ContractCallVote.js` */}
-              {/* <ContractCallVote /> */}
-              <ContractCall_pocket/>
-
-
-            </div>
+                  <ConnectWallet />
+                </div>
               </div>
-
-
-
-
               <form onSubmit={handleSubmit} className="space-y-6">
                 {/* Total Amount Input */}
                 <div>
@@ -160,7 +129,7 @@ export default function Home() {
                       type="number"
                       id="totalAmount"
                       value={distribution.amount}
-                      onChange={(e) => setDistribution(prev => ({ ...prev, amount: e.target.value }))}
+                      onChange={(e) => setDistribution(prev => ({ ...prev, amount: Number(e.target.value) }))}
                       className="block w-full px-4 py-3 rounded-lg border border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
                       placeholder="Enter total amount"
                       required
@@ -178,8 +147,7 @@ export default function Home() {
                       <input
                         type="radio"
                         value="equal"
-                        checked={distribution.mode === 'equal'}
-                        onChange={() => setDistribution(prev => ({ ...prev, mode: 'equal' }))}
+                        onChange={() => setDistribution(prev => ({ ...prev, mode: 0 }))}
                         className="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300"
                       />
                       <span className="ml-2 text-gray-700">Equal Distribution</span>
@@ -188,8 +156,8 @@ export default function Home() {
                       <input
                         type="radio"
                         value="random"
-                        checked={distribution.mode === 'random'}
-                        onChange={() => setDistribution(prev => ({ ...prev, mode: 'random' }))}
+                        checked={distribution.mode === 1}
+                        onChange={() => setDistribution(prev => ({ ...prev, mode: 1 }))}
                         className="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300"
                       />
                       <span className="ml-2 text-gray-700">Random Distribution</span>
@@ -228,19 +196,17 @@ export default function Home() {
                 </div>
 
                 {/* Submit Button */}
-                <button
+                <ContractCallPocketButton params={distribution} onDistribute={distribute} />
+                {/* <button
                   type="submit"
                   className="w-full flex justify-center py-3 px-4 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-colors"
                 >
                   Distribute Tokens
-                </button>
-
-
+                </button> */}
               </form>
             </div>
           </div>
         </div>
-
       </main>
     </Connect>
   );
