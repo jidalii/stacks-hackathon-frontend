@@ -6,6 +6,7 @@ import styles from "./page.module.css";
 import { Connect } from "@stacks/connect-react";
 import ConnectWallet, { userSession } from "../components/ConnectWallet";
 import ContractCallPocketButton from "../components/CreateRedPocket";
+import ClaimRedPocketButton from "../components/ClaimRedPocket";
 import React, { useState, useCallback } from 'react';
 import { Coins, AlertCircle } from 'lucide-react';
 import { DistributeParams } from "../types/DistributeParams";
@@ -53,6 +54,42 @@ export default function Home() {
       },
     });
   };
+
+  const claim = (index: number) => {
+
+    const postConditions = [
+      makeStandardSTXPostCondition(
+        "ST153CEHB9B8RGTT8NWGZX15H37KTH0S48WK0DC0H", // Replace with the recipient address
+        FungibleConditionCode.Equal,
+        0 // Replace with the actual transfer amount in micro-STX (1 STX = 1,000,000 micro-STX)
+      )
+    ];
+
+    doContractCall({
+      network: new StacksTestnet(),
+      anchorMode: AnchorMode.Any,
+      contractAddress: "ST153CEHB9B8RGTT8NWGZX15H37KTH0S48WK0DC0H",
+      contractName: "red9",
+      functionName: "claimRedPocket",
+      functionArgs: [
+        uintCV(index),
+      ],
+      postConditionMode: PostConditionMode.Deny,
+      postConditions: postConditions,
+      onFinish: (data: FinishedTxData) => {
+        console.log("onFinish:", data);
+        window
+          .open(
+            `https://explorer.hiro.so/txid/${data.txId}?chain=testnet`,
+            "_blank"
+          )
+          ?.focus();
+      },
+      onCancel: () => {
+        console.log("onCancel:", "Transaction was canceled");
+      },
+    });
+  }
 
   const [distribution, setDistribution] = useState<DistributeParams>({
     amount: 0,
@@ -225,6 +262,7 @@ export default function Home() {
 
                 {/* Submit Button */}
                 <ContractCallPocketButton params={distribution} onDistribute={distribute} />
+                <ClaimRedPocketButton index={0} onClaim={claim}/>
                 {/* <button
                   type="submit"
                   className="w-full flex justify-center py-3 px-4 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-colors"

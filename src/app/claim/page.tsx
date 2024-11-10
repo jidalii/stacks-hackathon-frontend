@@ -3,18 +3,24 @@
 //import React from "react";
 import styles from "../page.module.css";
 
+import React, { useEffect, useState } from "react";
 import { Connect } from "@stacks/connect-react";
 
 import ConnectWallet, { userSession } from "../../components/ConnectWallet";
 import ContractCallVote from "../../components/ContractCallVote";
+import { StacksTestnet } from "@stacks/network";
+import { AnchorMode, PostConditionMode, uintCV, makeStandardSTXPostCondition, FungibleConditionCode } from "@stacks/transactions";
+import { DistributeParams } from "../types/DistributeParams";
+import { FinishedTxData } from "@stacks/connect-react"; // Import the FinishedTxData type
+import { useConnect } from "@stacks/connect-react";
 
 import Link from 'next/link';
 
-import React, { useState, useCallback } from 'react';
 import { Coins, AlertCircle } from 'lucide-react';
 import { TokenDistribution } from '../../types/Distribution';
 import { TimeInputs } from '../../components/TimeInputs';
 import { AddressList } from '../../components/AddressList';
+import ClaimRedPocketButton from "@/components/ClaimRedPocket";
 
 export default function Home() {
 
@@ -29,6 +35,42 @@ export default function Home() {
       return newSelection;
     });
   };
+
+  const claim = (index: number) => {
+
+    const postConditions = [
+      makeStandardSTXPostCondition(
+        "ST153CEHB9B8RGTT8NWGZX15H37KTH0S48WK0DC0H", // Replace with the recipient address
+        FungibleConditionCode.GreaterEqual,
+        0 // Replace with the actual transfer amount in micro-STX (1 STX = 1,000,000 micro-STX)
+      )
+    ];
+
+    doContractCall({
+      network: new StacksTestnet(),
+      anchorMode: AnchorMode.Any,
+      contractAddress: "ST153CEHB9B8RGTT8NWGZX15H37KTH0S48WK0DC0H",
+      contractName: "red9",
+      functionName: "claimRedPocket",
+      functionArgs: [
+        uintCV(index),
+      ],
+      postConditionMode: PostConditionMode.Allow,
+      postConditions: postConditions,
+      onFinish: (data: FinishedTxData) => {
+        console.log("onFinish:", data);
+        window
+          .open(
+            `https://explorer.hiro.so/txid/${data.txId}?chain=testnet`,
+            "_blank"
+          )
+          ?.focus();
+      },
+      onCancel: () => {
+        console.log("onCancel:", "Transaction was canceled");
+      },
+    });
+  }
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -132,6 +174,7 @@ export default function Home() {
                       <div className={`bg-red-500 text-white rounded-lg p-4 w-64 text-center ${selectedPackets[index] ? 'opacity-100' : 'opacity-50'}`}>
                         {packet}
                       </div>
+                      <ClaimRedPocketButton index={index} onClaim={claim}></ClaimRedPocketButton>
                     </div>
                   ))}
                 </div>

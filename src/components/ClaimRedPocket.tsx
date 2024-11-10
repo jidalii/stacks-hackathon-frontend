@@ -10,24 +10,23 @@ import ConnectWallet, { userSession } from "../components/ConnectWallet";
 import { makeStandardSTXPostCondition, FungibleConditionCode } from "@stacks/transactions";
 
 interface ContractCallPocketButtonProps {
-  params: DistributeParams;
-  onDistribute: (params: DistributeParams) => void;
+  index: number;
+  onClaim: (index: number) => void;
 }
 
-const ContractCallPocketButton: React.FC<ContractCallPocketButtonProps> = ({ params, onDistribute }) => {
+const ClaimRedPocketButton: React.FC<ContractCallPocketButtonProps> = ({ index, onClaim }) => {
   const { doContractCall } = useConnect();
 
   const [mounted, setMounted] = useState(false);
   useEffect(() => setMounted(true), []);
 
-  const distribute = (params: DistributeParams) => {
-    const addressesCV = listCV(params.addresses.map(address => principalCV(address)));
+  const claim = (index: number) => {
 
     const postConditions = [
       makeStandardSTXPostCondition(
         "ST153CEHB9B8RGTT8NWGZX15H37KTH0S48WK0DC0H", // Replace with the recipient address
-        FungibleConditionCode.Equal,
-        params.amount // Replace with the actual transfer amount in micro-STX (1 STX = 1,000,000 micro-STX)
+        FungibleConditionCode.GreaterEqual,
+        0 // Replace with the actual transfer amount in micro-STX (1 STX = 1,000,000 micro-STX)
       )
     ];
 
@@ -36,15 +35,11 @@ const ContractCallPocketButton: React.FC<ContractCallPocketButtonProps> = ({ par
       anchorMode: AnchorMode.Any,
       contractAddress: "ST153CEHB9B8RGTT8NWGZX15H37KTH0S48WK0DC0H",
       contractName: "red9",
-      functionName: "createRedPocket",
+      functionName: "claimRedPocket",
       functionArgs: [
-        uintCV(params.amount),
-        uintCV(params.mode),
-        addressesCV,
-        uintCV(params.revealBlock),
-        uintCV(params.claimDuration),
+        uintCV(index),
       ],
-      postConditionMode: PostConditionMode.Deny,
+      postConditionMode: PostConditionMode.Allow,
       postConditions: postConditions,
       onFinish: (data: FinishedTxData) => {
         console.log("onFinish:", data);
@@ -67,11 +62,11 @@ const ContractCallPocketButton: React.FC<ContractCallPocketButtonProps> = ({ par
   return (
     <div className="Container">
       {/* <h3>Vote via Smart Contract</h3> */}
-      <button onClick={() => distribute(params)}>
-        create Pocket
+      <button onClick={() => claim(index)}>
+        claim
       </button>
 
     </div>
   );
 }
-export default ContractCallPocketButton;
+export default ClaimRedPocketButton;

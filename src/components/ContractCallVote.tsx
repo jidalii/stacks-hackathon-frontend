@@ -47,13 +47,13 @@ const ContractCallVote = () => {
 
   return (
     <div className="Container">
-      <h3>Vote via Smart Contract</h3>
+      {/* <h3>Vote via Smart Contract</h3>
       <button className="Vote" onClick={() => vote("🍊")}>
         Vote for 🍊
       </button>
       <button className="Vote" onClick={() => vote("🍎")}>
         Vote for 🍎
-      </button>
+      </button> */}
     </div>
   );
 };
