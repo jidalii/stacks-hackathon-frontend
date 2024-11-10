@@ -109,6 +109,65 @@
 } */
 
 
+.friends-list-container {
+  display: block;
+  border: 1px solid #ccc;
+  padding: 10px;
+  margin: 0 auto;
+  width: fit-content;
+}
+
+.friends-header {
+  display: flex; /* Use flexbox for layout */
+  justify-content: space-between; /* Space between title and input */
+  align-items: center; /* Center vertically */
+  margin-bottom: 10px; /* Space below the header */
+}
+
+.add-friend-input {
+  margin-left: 10px; /* Space between title and input */
+  padding: 5px;
+  border: 1px solid #ccc; /* Added border for better visibility */
+  border-radius: 5px; /* Rounded corners */
+}
+
+.friends-list {
+  list-style-type: none; /* Remove bullet points */
+  padding-left: 0; /* Remove default padding */
+}
+
+.friend-card {
+  background-color: #f9f9f9; /* Light background for the card */
+  border: 1px solid #ccc; /* Border for the card */
+  border-radius: 10px; /* Rounded edges */
+  padding: 15px; /* Padding inside the card */
+  margin-bottom: 10px; /* Space between cards */
+}
+
+.friend-name {
+  font-size: 20px;
+}
+
+.wallet-list {
+  list-style-type: none; /* Optional: remove bullet points */
+  padding-left: 0; /* Remove default padding */
+}
+
+.wallet-token {
+  margin: 5px 0; /* Optional: add some spacing between tokens */
+}
+
+.no-tokens {
+  color: gray; /* Optional: style for no tokens message */
+}
+
+.add-wallet-input {
+  margin-top: 10px; /* Space above the input */
+  margin-right: 5px;
+  padding: 5px;
+  animation: blink-caret 0.8s step-end infinite; /* Blinking cursor effect */
+}
+
 
 /* Enable hover only on non-touch devices */
 @media (hover: hover) and (pointer: fine) {

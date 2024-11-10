@@ -1,11 +1,14 @@
 "use client";
 
+//import React from "react";
 import styles from "./page.module.css";
 
 import { Connect } from "@stacks/connect-react";
 
 import ConnectWallet, { userSession } from "../components/ConnectWallet";
 import ContractCallVote from "../components/ContractCallVote";
+
+import Link from 'next/link';
 
 // import { Button } from "@/components/ui/button"
 // import { Input } from "@/components/ui/input"
@@ -122,7 +125,29 @@ export default function Home() {
           <div className="max-w-2xl mx-auto">
 
 
+                 {/* Navigation Bar */}
+                 <nav className="mb-6">
+                <ul className="flex space-x-4">
+                    
+                    <li className="relative border-r border-gray-300 pr-4">
+                          <Link href="/" className="text-indigo-600 hover:underline">
+                        Distribute Pocket
+                    </Link>
+                    </li>
 
+                    <li className="relative border-r border-gray-300 pr-4"> {/* Added border and padding */}
+                    <Link href="/claim" className="text-indigo-600 hover:underline">
+                        Claim Pocket
+                    </Link>
+                    </li>
+
+                    <li className="relative">
+                    <Link href="/friends" className="text-indigo-600 hover:underline">
+                        Find Friends
+                    </Link>
+                    </li>
+                </ul>
+                </nav>
 
 
             <div className="bg-white rounded-2xl shadow-xl p-6 sm:p-8">
@@ -230,16 +255,15 @@ export default function Home() {
                 >
                   Distribute Tokens
                 </button>
+
+
               </form>
+
             </div>
           </div>
         </div>
 
 
-        <FriendsPage />
-        <Link href="/friends">
-          <Button variant="link">Go to Friends Page</Button>
-        </Link>
 
       </main>
     </Connect>
