@@ -67,7 +67,8 @@ const ContractCallPocketButton: React.FC<ContractCallPocketButtonProps> = ({ par
   return (
     <div className="Container">
       {/* <h3>Vote via Smart Contract</h3> */}
-      <button onClick={() => distribute(params)}>
+      <button                   className="w-full flex justify-center py-3 px-4 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-colors"
+onClick={() => distribute(params)}>
         create Pocket
       </button>
 

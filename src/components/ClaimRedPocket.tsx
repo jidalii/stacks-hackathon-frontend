@@ -62,7 +62,8 @@ const ClaimRedPocketButton: React.FC<ContractCallPocketButtonProps> = ({ index, 
   return (
     <div className="Container">
       {/* <h3>Vote via Smart Contract</h3> */}
-      <button onClick={() => claim(index)}>
+      <button                   className="w-full flex justify-center py-3 px-4 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-colors"
+onClick={() => claim(index)}>
         claim
       </button>
 

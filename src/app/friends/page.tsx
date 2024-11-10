@@ -24,8 +24,8 @@ const FriendsPage: React.FC = () => {
 
   // Initialize the friends list in state
   const [friends, setFriends] = useState<Friend[]>([
-    { id: 1, name: 'Alice', walletTokens: ['btc_wallet_1', 'btc_wallet_2'] },
-    { id: 2, name: 'Bob', walletTokens: ['btc_wallet_3'] },
+    { id: 1, name: 'Alice', walletTokens: ['ST153CEHB9B8RGTT8NWGZX15H37KTH0S48WK0DC0H'] },
+    { id: 2, name: 'Bob', walletTokens: ['ST3EZR0XEXKHD0JWT9QQ9VK4HBY463N9HJXQMRAX0'] },
   ]);
 
   // Function to add a new friend

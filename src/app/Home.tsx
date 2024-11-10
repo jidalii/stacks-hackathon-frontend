@@ -2,15 +2,10 @@
 
 "use client";
 
-import styles from "./page.module.css";
 
-import { Connect } from "@stacks/connect-react";
-import ConnectWallet, { userSession } from "../components/ConnectWallet";
-import { distribute } from "../components/CreateRedPocket";
 import React, { useState, useCallback } from 'react';
-import { useConnect,ConnectProvider } from "@stacks/connect-react"; // Import useConnect hook
+import { useConnect } from "@stacks/connect-react"; // Import useConnect hook
 import { Coins, AlertCircle } from 'lucide-react';
-import { DistributeParams } from "../types/DistributeParams";
 
 import { TimeInputs } from '../components/TimeInputs';
 import { AddressList } from '../components/AddressList';

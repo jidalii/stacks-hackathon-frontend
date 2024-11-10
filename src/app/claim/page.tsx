@@ -10,7 +10,6 @@ import ConnectWallet, { userSession } from "../../components/ConnectWallet";
 import ContractCallVote from "../../components/ContractCallVote";
 import { StacksTestnet } from "@stacks/network";
 import { AnchorMode, PostConditionMode, uintCV, makeStandardSTXPostCondition, FungibleConditionCode } from "@stacks/transactions";
-import { DistributeParams } from "../types/DistributeParams";
 import { FinishedTxData } from "@stacks/connect-react"; // Import the FinishedTxData type
 import { useConnect } from "@stacks/connect-react";
 
@@ -164,29 +163,32 @@ export default function Home() {
                 {/* Red Packets Section */}
                 <div className="flex flex-col items-start">
                   {['Red Packet 1', 'Red Packet 2', 'Red Packet 3'].map((packet, index) => (
-                    <div key={index} className="flex items-center mb-4">
+                    <div key={index} className="flex items-center mb-4 ">
                       <input
                         type="checkbox"
                         checked={selectedPackets[index]}
                         onChange={() => handlePacketSelect(index)}
                         className="mr-2"
                       />
-                      <div className={`bg-red-500 text-white rounded-lg p-4 w-64 text-center ${selectedPackets[index] ? 'opacity-100' : 'opacity-50'}`}>
+{/* className="w-full flex justify-center py-3 px-4 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-colors" */}
+
+                      <div className={`bg-red-500  text-white rounded-lg py-3 px-4 w-64 m-4 text-center ${selectedPackets[index] ? 'opacity-100' : 'opacity-50'}`}>
                         {packet}
                       </div>
                       <ClaimRedPocketButton index={index} onClaim={claim}></ClaimRedPocketButton>
+
                     </div>
                   ))}
                 </div>
 
 
                 {/* Submit Button */}
-                <button
+                {/* <button
                   type="submit"
                   className="w-full flex justify-center py-3 px-4 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-colors"
                 >
                   Get Tokens
-                </button>
+                </button> */}
 
               </form>
 
