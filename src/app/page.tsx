@@ -5,7 +5,8 @@ import styles from "./page.module.css";
 import { Connect } from "@stacks/connect-react";
 
 import ConnectWallet, { userSession } from "../components/ConnectWallet";
-import ContractCallVote from "../components/ContractCallVote";
+// import ContractCallVote from "../components/ContractCallVote";
+import ContractCall_pocket from "../components/ContractCall_pocket";
 
 // import { Button } from "@/components/ui/button"
 // import { Input } from "@/components/ui/input"
@@ -139,6 +140,9 @@ export default function Home() {
               <ConnectWallet />
               {/* ContractCallVote file: `./src/components/ContractCallVote.js` */}
               {/* <ContractCallVote /> */}
+              <ContractCall_pocket/>
+
+
             </div>
               </div>
 
@@ -230,6 +234,8 @@ export default function Home() {
                 >
                   Distribute Tokens
                 </button>
+
+
               </form>
             </div>
           </div>
