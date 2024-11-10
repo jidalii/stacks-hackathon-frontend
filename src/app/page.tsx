@@ -7,7 +7,6 @@ import { Connect } from "@stacks/connect-react";
 import ConnectWallet, { userSession } from "../components/ConnectWallet";
 import ContractCallPocketButton from "../components/CreateRedPocket";
 import React, { useState, useCallback } from 'react';
-import { useConnect,ConnectProvider } from "@stacks/connect-react"; // Import useConnect hook
 import { Coins, AlertCircle } from 'lucide-react';
 import { DistributeParams } from "../types/DistributeParams";
 
@@ -15,8 +14,9 @@ import { TimeInputs } from '../components/TimeInputs';
 import { AddressList } from '../components/AddressList';
 import { StacksTestnet } from "@stacks/network";
 import { AnchorMode, PostConditionMode, uintCV, principalCV, listCV } from "@stacks/transactions";
-import { DistributeParams } from "../types/DistributeParams";
 import { FinishedTxData } from "@stacks/connect-react"; 
+import Link from 'next/link';
+
 
 export default function Home() {
   // const { doContractCall } = useConnect(); // useConnect inside component
